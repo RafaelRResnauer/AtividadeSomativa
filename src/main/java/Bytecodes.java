@@ -1,5 +1,9 @@
 import java.util.Vector;
 
+/**
+ * Classe para acessar os bytecodes
+ */
+
 public class Bytecodes {
     private Vector<ByteCode> byteCodes = new Vector<ByteCode>();
 

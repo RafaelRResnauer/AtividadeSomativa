@@ -1,12 +1,15 @@
 import java.util.Vector;
 
+/**
+ * Máquina Virtual
+ */
 public class VirtualMachine {
     //memória
     private final Vector<Integer> stack; // pilha de operandos
     private final Vector<Integer> code; // armazenamento para o código
     private final Vector<Integer> globals; // escopo para variáveis globais
     private Context ctx; // escopo ativo
-    private final Vector<FunctionMetaData> metaData;
+    private final Vector<FunctionMetaData> metaData; // Funções
 
     // Registradores globais detro da máquina
     private int ip; // ponteiro de instruções
@@ -22,7 +25,7 @@ public class VirtualMachine {
     public VirtualMachine(Vector<Integer> code, int numGlobals, Vector<FunctionMetaData> metaData) {
         this.code = code;
         this.globals = new Vector<>();
-        for(int i = 0; i < numGlobals; i++){
+        for(int i = 0; i < numGlobals; i++){ // Inicializa o globals
             globals.add(null);
         }
         this.stack = new Vector<>(DEFAULT_STACK_SIZE);
@@ -31,7 +34,7 @@ public class VirtualMachine {
 
     public void exec(int startIp) throws Exception {
         this.ip = startIp;
-        this.ctx = new Context(null,0, metaData.get(0));
+        this.ctx = new Context(null,0, metaData.get(0)); // Cria o contexto inicial
         simulaCPU();
     }
     private void simulaCPU() throws Exception {
@@ -152,9 +155,7 @@ public class VirtualMachine {
                     break;
                 case 15: // CALL
                     // todos os argumentos devem estar na pilha
-
                     int funcIndex = code.get(ip++);
-
                     int numArgs = metaData.get(funcIndex).getNumArgs();
 
                     // determina um novo contexto que aponta para o contexto pai,
@@ -167,6 +168,7 @@ public class VirtualMachine {
                         ctx.locals.set(i,stack.get(firstArg+i));
 
                     }
+                    // remove os args da pilha
                     for(int i = sp; i>sp-numArgs; i--){
                         stack.remove(i);
                     }

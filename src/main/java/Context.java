@@ -14,7 +14,7 @@ public class Context {
         this.metaData = metaData;
         this.returnIp = returnIp;
         this.locals = new Vector<>();
-        for(int i = 0; i<metaData.getNumArgs() + metaData.getNumLocals(); i++){
+        for(int i = 0; i<metaData.getNumArgs() + metaData.getNumLocals(); i++){ // inicializa o locals para ser utilizado depois
             locals.add(null);
         }
     }

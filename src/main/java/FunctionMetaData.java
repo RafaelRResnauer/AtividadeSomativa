@@ -1,8 +1,12 @@
+/**
+ * Classe para salver informações sobre uma função
+ */
+
 public class FunctionMetaData {
-    private String name;
-    private int numArgs;
-    private int numLocals;
-    private int address;
+    private String name; // Nome da função
+    private int numArgs; // Número de argumentos
+    private int numLocals; // Número de var locais
+    private int address; // Endereço na memória
 
     public FunctionMetaData(String name, int numArgs, int numLocals, int address) {
         this.name = name;

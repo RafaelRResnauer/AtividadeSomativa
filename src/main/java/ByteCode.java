@@ -1,3 +1,8 @@
+/**
+ * Classe Para salvar o nome de uma operação
+ * e quantos argumentos necessita
+ */
+
 public class ByteCode {
     private String name;
     private int args;
