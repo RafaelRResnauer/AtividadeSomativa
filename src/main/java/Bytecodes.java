@@ -5,7 +5,7 @@ import java.util.Vector;
  */
 
 public class Bytecodes {
-    private Vector<ByteCode> byteCodes = new Vector<ByteCode>();
+    private Vector<ByteCode> byteCodes = new Vector<>();
 
     public Bytecodes(){
         byteCodes.add(new ByteCode("nop", 0));
