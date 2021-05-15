@@ -6,7 +6,7 @@ import java.util.Vector;
 public class VirtualMachine {
     //memória
     private final Vector<Integer> stack; // pilha de operandos
-    private final Vector<Integer> code; // armazenamento para o código
+    private final Vector<Byte[]> code; // armazenamento para o código
     private final Vector<Integer> globals; // escopo para variáveis globais
     private Context ctx; // escopo ativo
     private final Vector<FunctionMetaData> metaData; // Funções
@@ -22,7 +22,7 @@ public class VirtualMachine {
     private final boolean TRACE = false;
 
 
-    public VirtualMachine(Vector<Integer> code, int numGlobals, Vector<FunctionMetaData> metaData) {
+    public VirtualMachine(Vector<Byte[]> code, int numGlobals, Vector<FunctionMetaData> metaData) {
         this.code = code;
         this.globals = new Vector<>();
         for(int i = 0; i < numGlobals; i++){ // Inicializa o globals
@@ -38,7 +38,7 @@ public class VirtualMachine {
         simulaCPU();
     }
     private void simulaCPU() throws Exception {
-        int opcode = code.get(ip);
+        int opcode = Conversions.byteArrayToInt(code.get(ip));
         int a,b,addr,regNum;
 
         while(opcode != OpCode.HALT.ordinal() && ip<code.size()){
@@ -100,10 +100,10 @@ public class VirtualMachine {
                     stack.add(a==b ? 1:0);
                     break;
                 case 5: // BR
-                    ip = code.get(ip++);
+                    ip = Conversions.byteArrayToInt(code.get(ip++));
                     break;
                 case 6: // BRT
-                    addr = code.get(ip++);
+                    addr = Conversions.byteArrayToInt(code.get(ip++));
                     if(stack.get(sp)>=1){
                         ip = addr;
                     }
@@ -111,7 +111,7 @@ public class VirtualMachine {
                     sp--;
                     break;
                 case 7: // BRF
-                    addr = code.get(ip++);
+                    addr = Conversions.byteArrayToInt(code.get(ip++));
                     if(stack.get(sp)<1){
                         ip = addr;
                     }
@@ -120,26 +120,26 @@ public class VirtualMachine {
                     break;
                 case 8: // ICONST
                     ++sp;
-                    stack.add(code.get(ip++));
+                    stack.add(Conversions.byteArrayToInt(code.get(ip++)));
                     break;
                 case 9: // LOAD
-                    regNum = code.get(ip++);
+                    regNum = Conversions.byteArrayToInt(code.get(ip++));
                     ++sp;
                     stack.add(ctx.locals.get(regNum));
                     break;
                 case 10: // GLOAD
-                    addr = code.get(ip++);
+                    addr = Conversions.byteArrayToInt(code.get(ip++));
                     ++sp;
                     stack.add(globals.get(addr));
                     break;
                 case 11: // STORE
-                    regNum = code.get(ip++);
+                    regNum = Conversions.byteArrayToInt(code.get(ip++));
                     ctx.locals.set(regNum,stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     break;
                 case 12: // GSTORE
-                    addr = code.get(ip++);
+                    addr = Conversions.byteArrayToInt(code.get(ip++));
                     globals.set(addr,stack.get(sp));
                     stack.remove(sp);
                     sp--;
@@ -155,7 +155,7 @@ public class VirtualMachine {
                     break;
                 case 15: // CALL
                     // todos os argumentos devem estar na pilha
-                    int funcIndex = code.get(ip++);
+                    int funcIndex = Conversions.byteArrayToInt(code.get(ip++));
                     int numArgs = metaData.get(funcIndex).getNumArgs();
 
                     // determina um novo contexto que aponta para o contexto pai,
@@ -192,7 +192,7 @@ public class VirtualMachine {
             if (TRACE){
                 System.out.println(traceStack() + "\t" + traceCallStack() + "\t");
             }
-            opcode = code.get(ip);
+            opcode = Conversions.byteArrayToInt(code.get(ip));
         }
         //imprime o trace na tela para permitir o acompanhamento da máquina
         if(TRACE){
@@ -210,13 +210,13 @@ public class VirtualMachine {
     //apenas para os traces
     private String traceInstruction() {
         Bytecodes bytecodes = new Bytecodes();
-        int opcode = code.get(ip) + 1;
+        int opcode = Conversions.byteArrayToInt(code.get(ip)) + 1;
         String opName =  bytecodes.getByteCodes().get(opcode).getName();
         String ss = "";
         ss += "    " + ip + ":\t" + opName;
         int numArgs = bytecodes.getByteCodes().get(opcode).getArgs();
         if(opcode == OpCode.CALL.ordinal() + 1){
-            ss += " " + metaData.get(code.get(ip+1)).getName();
+            ss += " " + metaData.get(Conversions.byteArrayToInt(code.get(ip+1))).getName();
         }else if(numArgs > 0){
             Vector<String> operands = new Vector<>();
             for(int i = ip+1; i <= ip+numArgs; i++){
