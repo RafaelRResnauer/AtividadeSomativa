@@ -40,7 +40,7 @@ public class VirtualMachine {
     private void simulaCPU() throws Exception {
         int opcode = code.get(ip);
         int a,b,addr,regNum;
-        
+
         while(opcode != OpCode.HALT.ordinal() && ip<code.size()){
             if(TRACE){
                 System.out.print(traceInstruction() + "\t");
@@ -204,7 +204,7 @@ public class VirtualMachine {
         if(TRACE){
             System.out.println(traceDataMemory());
         }
-        
+
     }
 
     //apenas para os traces
