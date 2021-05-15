@@ -5,6 +5,38 @@ se divisor for 0 -> retorne erro
 subtrair expoentes e somar 1 bias (127)
 
 dividir as mantissas e determinar o sinal
-?
 
+	100 | 1001110. 	|
+	--- | ---    . 	|
+	Sim | 000    . 	| 1
+            | .  1   . 	| 1
+	    | .  11  . 	| 10
+	    | .  111 . 	| 100
+        --- | .  --- . 	|
+            | .  011 . 	| 1001
+	    | .   110. 	| 1001
+	    | .   010. 	| 10011
+            | .    10. 	| 10011
+            | .    100	| 10011.1
+	    | .    000	| 10011.1 
+
+	normalizando
+			10011.1 * 2^0 -> 001
+			1.00111 * 2^4 -> 100
+mantisa float -> 	00111 	* 2^4 -> 100
+
+	0 100(+ bias) 00111
+
+	bias 2
+
+	0 110 00111
+
+	então
+
+	0 101 00000000 / 0 011 00111000 = 0 100 00111000 ou algo assim
+
+sinal em divisão
+(+ + -> +, + - -> -, - - -> +, - + -> -)
+XOR
+     
 normalizar a mantissa nova
