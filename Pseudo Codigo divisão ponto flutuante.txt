@@ -1,0 +1,10 @@
+se numerado for 0 -> retorne 0
+
+se divisor for 0 -> retorne erro
+
+subtrair expoentes e somar 1 bias (127)
+
+dividir as mantissas e determinar o sinal
+?
+
+normalizar a mantissa nova
