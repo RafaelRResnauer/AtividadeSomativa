@@ -1,0 +1,39 @@
+
+Soma
+
+Expoente, pega maior
+
+mantissa, mantissa com menor expoente -> Bitshitft right (>>) * diferença entre a mantissa maior e a menor
+
+sinal: manter sinal do expoente maior, caso iguais, manter sinal da mantissa maior
+
+soma positivo (soma)
+
+static int Add(int x, int y)
+{
+  if (y == 0)
+    return x;
+  else
+    return Add(x ^ y, (x & y) << 1);
+}
+ 
+// This code is contributed by subham348
+
+soma negativa (subtrai o menor do maior)
+
+// Recursive implementation.
+
+static int subtract(int x, int y)
+{
+ 
+    if (y == 0)
+        return x;
+ 
+    return subtract(x ^ y, (~x & y) << 1);
+}
+
+vai resultar em uma "mantissa" nova
+
+numero resultante xx.xxxxxxx
+se o numero for < 10.000 (ou seja, 01.xxxxx), mantem o expoente.
+se for 10.xxxxxx, incremente o expoente por 1. (add 1 to expoente)
