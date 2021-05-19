@@ -5,9 +5,9 @@ import java.util.Vector;
  */
 public class VirtualMachine {
     //memória
-    private final Vector<Integer> stack; // pilha de operandos
+    private final Vector<Byte[]> stack; // pilha de operandos
     private final Vector<Byte[]> code; // armazenamento para o código
-    private final Vector<Integer> globals; // escopo para variáveis globais
+    private final Vector<Byte[]> globals; // escopo para variáveis globais
     private Context ctx; // escopo ativo
     private final Vector<FunctionMetaData> metaData; // Funções
 
@@ -50,61 +50,61 @@ public class VirtualMachine {
             switch(opcode){
 
                 case 0: //IADD
-                    b = stack.get(sp);
+                    b = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
-                    a = stack.get(sp);
+                    a = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     sp++;
-                    stack.add(a+b);
+                    stack.add(Conversions.intToBytes(a+b));
                     break;
                 case 1: // ISUB
-                    b = stack.get(sp);
+                    b = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
-                    a = stack.get(sp);
+                    a = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     sp++;
-                    stack.add(a-b);
+                    stack.add(Conversions.intToBytes(a-b));
                     break;
                 case 2: // IMUL
-                    b = stack.get(sp);
+                    b = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
-                    a = stack.get(sp);
+                    a = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     sp++;
-                    stack.add(a*b);
+                    stack.add(Conversions.intToBytes(a*b));
                     break;
                 case 3: // ILT
-                    b = stack.get(sp);
+                    b = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
-                    a = stack.get(sp);
+                    a = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     sp++;
-                    stack.add(a<b ? 1:0);
+                    stack.add(Conversions.intToBytes(a<b ? 1:0));
                     break;
                 case 4: // IEQ
-                    b = stack.get(sp);
+                    b = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
-                    a = stack.get(sp);
+                    a = Conversions.byteArrayToInt(stack.get(sp));
                     stack.remove(sp);
                     sp--;
                     sp++;
-                    stack.add(a==b ? 1:0);
+                    stack.add(Conversions.intToBytes((a==b ? 1:0)));
                     break;
                 case 5: // BR
                     ip = Conversions.byteArrayToInt(code.get(ip++));
                     break;
                 case 6: // BRT
                     addr = Conversions.byteArrayToInt(code.get(ip++));
-                    if(stack.get(sp)>=1){
+                    if(Conversions.byteArrayToInt(stack.get(sp))>=1){
                         ip = addr;
                     }
                     stack.remove(sp);
@@ -112,7 +112,7 @@ public class VirtualMachine {
                     break;
                 case 7: // BRF
                     addr = Conversions.byteArrayToInt(code.get(ip++));
-                    if(stack.get(sp)<1){
+                    if(Conversions.byteArrayToInt(stack.get(sp))<1){
                         ip = addr;
                     }
                     stack.remove(sp);
@@ -120,7 +120,7 @@ public class VirtualMachine {
                     break;
                 case 8: // ICONST
                     ++sp;
-                    stack.add(Conversions.byteArrayToInt(code.get(ip++)));
+                    stack.add(code.get(ip++));
                     break;
                 case 9: // LOAD
                     regNum = Conversions.byteArrayToInt(code.get(ip++));
@@ -145,7 +145,7 @@ public class VirtualMachine {
                     sp--;
                     break;
                 case 13: // PRINT
-                    System.out.println(stack.get(sp));
+                    System.out.println(Conversions.byteArrayToInt(stack.get(sp)));
                     stack.remove(sp);
                     --sp;
                     break;
@@ -180,9 +180,9 @@ public class VirtualMachine {
                     ctx = ctx.invokingContext;
                     break;
                 case 17: // DUP
-                    int top = stack.get(sp);
+                    int top = Conversions.byteArrayToInt(stack.get(sp));
                     ++sp;
-                    stack.add(top);
+                    stack.add(Conversions.intToBytes(top));
                     break;
                 default:
                     int temp = ip-1;
@@ -239,7 +239,7 @@ public class VirtualMachine {
         String ss = "";
         ss += "stack=[";
         for(int i = 0; i <= sp; i++){
-            int o = stack.get(i);
+            int o = Conversions.byteArrayToInt(stack.get(i));
             ss += " ";
             ss += o;
         }
@@ -271,8 +271,8 @@ public class VirtualMachine {
         String ss = "";
         ss += "Dados em memoria: ";
         int addr = 0;
-        for(int o : globals){
-            ss += "    " + addr + ": " + o + "\n";
+        for(Byte[] o : globals){
+            ss += "    " + addr + ": " + Conversions.byteArrayToInt(o) + "\n";
             addr++;
         }
         return ss;
