@@ -19,7 +19,7 @@ public class VirtualMachine {
     private final int DEFAULT_CALL_STACK_SIZE = 10000;
 
     //coloque em true para o trace
-    private final boolean TRACE = false;
+    private final boolean TRACE = true;
 
 
     public VirtualMachine(Vector<Byte[]> code, int numGlobals, Vector<FunctionMetaData> metaData) {
@@ -220,7 +220,8 @@ public class VirtualMachine {
         }else if(numArgs > 0){
             Vector<String> operands = new Vector<>();
             for(int i = ip+1; i <= ip+numArgs; i++){
-                operands.add(code.get(i).toString());
+                Integer tmp = Conversions.byteArrayToInt(code.get(i));
+                operands.add(tmp.toString());
             }
             for(int i = 0; i < operands.size(); i++){
                 String s = operands.get(i);

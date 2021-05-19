@@ -122,9 +122,9 @@ public class Main {
         //soma
         addFunction();
         //fatorial
-        factorial();
+        //factorial();
         //fibonacci
-        fib();
+        //fib();
 
     }
 }
