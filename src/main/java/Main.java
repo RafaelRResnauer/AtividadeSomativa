@@ -237,16 +237,16 @@ public class Main {
 
         // Float operacoes
 
-        System.out.print("Soma (16.70 + 15.50 + 21.70): ");
+        System.out.print("Soma (16.70 + 15.50 + 21.70):\n");
         fAdd();
 
-        System.out.print("Subtração (13.5 - 5.3 - 3.2): ");
+        System.out.print("Subtração (13.5 - 5.3 - 3.2):\n");
         fSub();
 
-        System.out.print("Multiplicação (3.2 * 5.5 * 13.0): ");
+        System.out.print("Multiplicação (3.2 * 5.5 * 13.0):\n");
         fMul();
 
-        System.out.print("Divisão ((15.625 / 2.5) / 2.5): ");
+        System.out.print("Divisão ((15.625 / 2.5) / 2.5):\n");
         fDiv();
 
     }
