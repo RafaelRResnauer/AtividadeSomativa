@@ -35,6 +35,7 @@ public class Bytecodes {
         byteCodes.add(new ByteCode("flt", 0)); // float menor que
         byteCodes.add(new ByteCode("feq", 0)); // float igual a
         byteCodes.add(new ByteCode("fconst", 1)); // push constante float
+        byteCodes.add(new ByteCode("fprint", 0)); // print topo do stack
     }
 
     public Vector<ByteCode> getByteCodes() {

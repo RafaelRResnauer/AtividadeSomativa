@@ -19,7 +19,7 @@ public class VirtualMachine {
     private final int DEFAULT_CALL_STACK_SIZE = 10000;
 
     //coloque em true para o trace
-    private final boolean TRACE = true;
+    private final boolean TRACE = false;
 
 
     public VirtualMachine(Vector<Byte[]> code, int numGlobals, Vector<FunctionMetaData> metaData) {
@@ -40,10 +40,11 @@ public class VirtualMachine {
     private void simulaCPU() throws Exception {
         int opcode = Conversions.byteArrayToInt(code.get(ip));
         int a,b,addr,regNum;
+        float c,d;
 
         while(opcode != OpCode.HALT.ordinal() && ip<code.size()){
             if(TRACE){
-                System.out.print(traceInstruction() + "\t");
+                System.out.print(traceInstruction() + "\t" + "\n");
             }
             ip++;
 
@@ -144,7 +145,7 @@ public class VirtualMachine {
                     stack.remove(sp);
                     sp--;
                     break;
-                case 13: // PRINT
+                case 13: // IPRINT
                     System.out.println(Conversions.byteArrayToInt(stack.get(sp)));
                     stack.remove(sp);
                     --sp;
@@ -180,31 +181,104 @@ public class VirtualMachine {
                     ctx = ctx.invokingContext;
                     break;
                 case 17: // DUP
-                    int top = Conversions.byteArrayToInt(stack.get(sp));
+                    Byte[] top = stack.get(sp);
                     ++sp;
-                    stack.add(Conversions.intToBytes(top));
+                    stack.add(top);
+                    break;
+                case 19: // FADD
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.floatToByteArray(c+d));
+                    break;
+                case 20: // FSUB
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.floatToByteArray(c-d));
+                    break;
+                case 21: // FMUL
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.floatToByteArray(c*d));
+                    break;
+                case 22: // FDIV
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.floatToByteArray(c/d));
+                    break;
+                case 23: // FLT
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.intToBytes(c < d ? 1 : 0));
+                    break;
+                case 24: // FEQ
+                    c = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    d = Conversions.byteArrayToFloat(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    sp++;
+                    stack.add(Conversions.intToBytes(c == d ? 1 : 0));
+                    break;
+                case 25: // FCONST
+                    float f = Conversions.byteArrayToFloat(code.get(ip++));
+                    ++sp;
+                    stack.add(Conversions.floatToByteArray(f));
+                    break;
+                case 26: // FPRINT
+                    System.out.println(Conversions.byteArrayToFloat(stack.get(sp)));
+                    stack.remove(sp);
+                    --sp;
                     break;
                 default:
                     int temp = ip-1;
-                    throw new Exception("OpCode Invalido: " + opcode +
+                    throw new Exception("OpCode Inválido: " + opcode +
                             " em: " + temp);
             }
+            /*
             if (TRACE){
                 System.out.println(traceStack() + "\t" + traceCallStack() + "\t");
             }
+            */
             opcode = Conversions.byteArrayToInt(code.get(ip));
         }
         //imprime o trace na tela para permitir o acompanhamento da máquina
         if(TRACE){
-            System.out.println(traceInstruction());
+            System.out.println(traceInstruction() + "\n");
         }
+        /*
         if(TRACE){
             System.out.println("\t\t\t"+traceStack());
         }
         if(TRACE){
             System.out.println(traceDataMemory());
         }
-
+        */
     }
 
     //apenas para os traces
@@ -217,7 +291,22 @@ public class VirtualMachine {
         int numArgs = bytecodes.getByteCodes().get(opcode).getArgs();
         if(opcode == OpCode.CALL.ordinal() + 1){
             ss += " " + metaData.get(Conversions.byteArrayToInt(code.get(ip+1))).getName();
-        }else if(numArgs > 0){
+        }else if(opcode > 18 && numArgs > 0){
+            Vector<String> operands = new Vector<>();
+            for(int i = ip+1; i <= ip+numArgs; i++){
+                Float tmp = Conversions.byteArrayToFloat(code.get(i));
+                operands.add(tmp.toString());
+            }
+            for(int i = 0; i < operands.size(); i++){
+                String s = operands.get(i);
+                ss += " ";
+                if(i>0){
+                    ss += ", ";
+                }
+                ss += s;
+            }
+
+        } else if(opcode <= 18 && numArgs > 0){
             Vector<String> operands = new Vector<>();
             for(int i = ip+1; i <= ip+numArgs; i++){
                 Integer tmp = Conversions.byteArrayToInt(code.get(i));
@@ -273,7 +362,7 @@ public class VirtualMachine {
         ss += "Dados em memoria: ";
         int addr = 0;
         for(Byte[] o : globals){
-            ss += "    " + addr + ": " + Conversions.byteArrayToInt(o) + "\n";
+            ss += "    " + addr + ": " + o + "\n";
             addr++;
         }
         return ss;

@@ -1,7 +1,8 @@
 public class Conversions {
-    public static byte[] floatToByteArray(Float value) {
+
+    public static Byte[] floatToByteArray(Float value) {
         int intBits =  Float.floatToIntBits(value);
-        return new byte[] {
+        return new Byte[] {
                 (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
     }
 
