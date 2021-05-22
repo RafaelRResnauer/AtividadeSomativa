@@ -7,7 +7,7 @@ public class Context {
     Context invokingContext; // contexto que chamou a função - parent
     FunctionMetaData metaData; // dados da função a ser executada
     int returnIp; // ponteiro de intrução para retorno de função
-    Vector<Integer> locals; // args + locals, indexed from 0
+    Vector<Byte[]> locals; // args + locals, indexed from 0
 
     public Context(Context invokingContext, int returnIp , FunctionMetaData metaData) {
         this.invokingContext = invokingContext;

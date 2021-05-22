@@ -28,6 +28,14 @@ public class Bytecodes {
         byteCodes.add(new ByteCode("ret", 0)); // return com, ou sem, valor.
         byteCodes.add(new ByteCode("dup", 0)); // apaga a pilha (volta para o topo)
         byteCodes.add(new ByteCode("halt", 0)); // parar
+        byteCodes.add(new ByteCode("fadd", 0)); // float soma
+        byteCodes.add(new ByteCode("fsub", 0)); // float subtração
+        byteCodes.add(new ByteCode("fmul", 0)); // float multiplicação
+        byteCodes.add(new ByteCode("fdiv", 0)); // float divisão
+        byteCodes.add(new ByteCode("flt", 0)); // float menor que
+        byteCodes.add(new ByteCode("feq", 0)); // float igual a
+        byteCodes.add(new ByteCode("fconst", 1)); // push constante float
+        byteCodes.add(new ByteCode("fprint", 0)); // print topo do stack
     }
 
     public Vector<ByteCode> getByteCodes() {
