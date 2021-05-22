@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public class Main {
 
+    //comment
     static void addFunction(){
         Vector<Integer> code = new Vector<>();
         code.add(OpCode.LOAD.ordinal()); code.add(0); // move argumentos do regitrador 0 para o stack
