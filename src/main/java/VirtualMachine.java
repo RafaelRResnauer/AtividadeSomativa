@@ -260,6 +260,8 @@ public class VirtualMachine {
                     stack.remove(sp);
                     sp--;
                     b = Conversions.byteArrayToInt(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
                     a = a >> b;
                     sp++;
                     stack.add(Conversions.intToBytes(a));
@@ -269,6 +271,8 @@ public class VirtualMachine {
                     stack.remove(sp);
                     sp--;
                     b = Conversions.byteArrayToInt(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
                     a = a << b;
                     sp++;
                     stack.add(Conversions.intToBytes(a));
