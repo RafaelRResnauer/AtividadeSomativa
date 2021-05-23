@@ -213,7 +213,7 @@ public class Main {
 
         Vector<FunctionMetaData> fmd = new Vector<>();
         fmd.add(new FunctionMetaData("main",0,0,9));
-        fmd.add(new FunctionMetaData("mulFunction",3,3,0));
+        fmd.add(new FunctionMetaData("divFunction",3,3,0));
         VirtualMachine vm = new VirtualMachine(code,0,fmd);
         try {
             vm.exec(9);
@@ -222,7 +222,54 @@ public class Main {
         }
     }
 
+    static void shiftR(){
+        Vector<Byte[]> code = new Vector<>();
+        code.add(Conversions.intToBytes(OpCode.LOAD.ordinal())); code.add(Conversions.intToBytes(0)); // move argumentos do regitrador 0 para o stack
+        code.add(Conversions.intToBytes(OpCode.LOAD.ordinal())); code.add(Conversions.intToBytes(1)); // move argument do regitrador 1 para o stack
+        code.add(Conversions.intToBytes(OpCode.BITR.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.RET.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.ICONST.ordinal())); code.add(Conversions.intToBytes(4)); //Números inteiros que serão somados.
+        code.add(Conversions.intToBytes(OpCode.ICONST.ordinal())); code.add(Conversions.intToBytes(16));
+        code.add(Conversions.intToBytes(OpCode.CALL.ordinal())); code.add(Conversions.intToBytes(1)); // move argumentos do stack para os registradores
+        code.add(Conversions.intToBytes(OpCode.PRINT.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.HALT.ordinal()));
+
+        Vector<FunctionMetaData> fmd = new Vector<>();
+        fmd.add(new FunctionMetaData("main",0,0,6));
+        fmd.add(new FunctionMetaData("shiftR",2,2,0));
+        VirtualMachine vm = new VirtualMachine(code,0,fmd);
+        try {
+            vm.exec(6);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    static void shiftL(){
+        Vector<Byte[]> code = new Vector<>();
+        code.add(Conversions.intToBytes(OpCode.LOAD.ordinal())); code.add(Conversions.intToBytes(0)); // move argumentos do regitrador 0 para o stack
+        code.add(Conversions.intToBytes(OpCode.LOAD.ordinal())); code.add(Conversions.intToBytes(1)); // move argument do regitrador 1 para o stack
+        code.add(Conversions.intToBytes(OpCode.BITL.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.RET.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.ICONST.ordinal())); code.add(Conversions.intToBytes(4)); //Números inteiros que serão somados.
+        code.add(Conversions.intToBytes(OpCode.ICONST.ordinal())); code.add(Conversions.intToBytes(16));
+        code.add(Conversions.intToBytes(OpCode.CALL.ordinal())); code.add(Conversions.intToBytes(1)); // move argumentos do stack para os registradores
+        code.add(Conversions.intToBytes(OpCode.PRINT.ordinal()));
+        code.add(Conversions.intToBytes(OpCode.HALT.ordinal()));
+
+        Vector<FunctionMetaData> fmd = new Vector<>();
+        fmd.add(new FunctionMetaData("main",0,0,6));
+        fmd.add(new FunctionMetaData("shiftL",2,2,0));
+        VirtualMachine vm = new VirtualMachine(code,0,fmd);
+        try {
+            vm.exec(6);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
+
         System.out.println("Operações com Int");
         //soma
         System.out.print("Soma: ");
@@ -249,6 +296,18 @@ public class Main {
 
         System.out.print("Divisão ((15.625 / 2.5) / 2.5):\n");
         fDiv();
+
+        // Bit operacoes
+
+        System.out.println("\nOperações com Bits");
+
+        System.out.print("Shift 16 right 4 bits\n");
+        shiftR();
+
+        System.out.print("Shift 16 left 4 bits\n");
+        shiftL();
+
+
 
     }
 }
