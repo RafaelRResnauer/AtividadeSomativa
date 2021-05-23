@@ -1,9 +1,0 @@
-Mesmo processo de equalizar os expoentes dos numeros
-
-subtrair as mantissas.
-
-o numero resultante vai ser entre 01.xxxx e 00.xxxx
-				   ^ primeiro 1 é omitido
-
-decrementar até o numero de ponto fixo ser 01.xxxxx
-
