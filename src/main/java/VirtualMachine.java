@@ -255,6 +255,24 @@ public class VirtualMachine {
                     stack.remove(sp);
                     --sp;
                     break;
+                case 27: //BITR
+                    a = Conversions.byteArrayToInt(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    b = Conversions.byteArrayToInt(stack.get(sp));
+                    a = a >> b;
+                    sp++;
+                    stack.add(Conversions.intToBytes(a));
+                    break;
+                case 28: //BITL
+                    a = Conversions.byteArrayToInt(stack.get(sp));
+                    stack.remove(sp);
+                    sp--;
+                    b = Conversions.byteArrayToInt(stack.get(sp));
+                    a = a << b;
+                    sp++;
+                    stack.add(Conversions.intToBytes(a));
+                    break;
                 default:
                     int temp = ip-1;
                     throw new Exception("OpCode Inválido: " + opcode +
