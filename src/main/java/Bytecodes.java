@@ -36,6 +36,8 @@ public class Bytecodes {
         byteCodes.add(new ByteCode("feq", 0)); // float igual a
         byteCodes.add(new ByteCode("fconst", 1)); // push constante float
         byteCodes.add(new ByteCode("fprint", 0)); // print topo do stack
+        byteCodes.add(new ByteCode("bitr",0));
+        byteCodes.add(new ByteCode("bitl",0));
     }
 
     public Vector<ByteCode> getByteCodes() {
